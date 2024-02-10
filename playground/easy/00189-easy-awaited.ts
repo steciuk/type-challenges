@@ -22,7 +22,15 @@
 
 /* _____________ Your Code Here _____________ */
 
-type MyAwaited<T> = any
+// 1 works for all except T case
+// type MyAwaited<T extends Promise<any>> = T extends Promise<infer R> ? R extends Promise<any> ? MyAwaited<R> : R : never
+
+// 2 
+type MyAwaited<T extends PromiseLike<any>> = T extends { then: (onfulfilled: (args: infer R) => any) => any } 
+  ? R extends PromiseLike<any> 
+    ? MyAwaited<R> 
+    : R 
+  : never
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
@@ -32,6 +40,8 @@ type Y = Promise<{ field: number }>
 type Z = Promise<Promise<string | number>>
 type Z1 = Promise<Promise<Promise<string | boolean>>>
 type T = { then: (onfulfilled: (arg: number) => any) => any }
+
+type t = MyAwaited<X>
 
 type cases = [
   Expect<Equal<MyAwaited<X>, string>>,
