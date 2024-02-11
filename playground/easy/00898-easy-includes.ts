@@ -63,7 +63,7 @@ type Includes2<T extends readonly any[], U> = T extends [first: infer First, ...
 // Expect<Equal<Includes<[{ a: 'A' }], { readonly a: 'A' }>, false>>,
 // Expect<Equal<Includes<[{ readonly a: 'A' }], { a: 'A' }>, false>>,
 
-// because ?? TODO: why?
+// https://github.com/microsoft/TypeScript/issues/27024#issuecomment-421529650
 
 type MyEqual2<X, Y> =
   (<T>() => T extends X ? 1 : 2) extends
