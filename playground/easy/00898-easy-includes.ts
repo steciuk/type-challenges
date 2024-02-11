@@ -18,7 +18,64 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Includes<T extends readonly any[], U> = any
+type Includes1<T extends readonly any[], U> = T extends [first: infer First, ...rest: infer Rest] ?
+  U extends First ?
+    First extends U ?
+      true
+      : Includes<Rest, U>
+    : Includes<Rest, U>
+  : false
+
+// This does not work for:
+
+// Expect<Equal<Includes<[boolean, 2, 3, 5, 6, 7], false>, false>>,
+// Expect<Equal<Includes<[true, 2, 3, 5, 6, 7], boolean>, false>>,
+
+// because np boolean being first in this case gets distributed and conditionals are not exclusive, we get an union of true | false
+// see:
+
+type Check<T extends readonly any[], U> = T extends [first: infer First, ...rest: infer Rest]
+  ? U extends First
+    ? First extends U
+      ? '1'
+      : '2'
+    : '3'
+  : '4'
+
+type t3 = Check<[boolean, 2, 3, 5, 6, 7], false> // t3 = "1" | "2"
+
+// This works for those cases:
+
+type MyEqual<X, Y> = X extends Y ?
+  Y extends X ?
+    true
+    : false
+  : false
+
+type Includes2<T extends readonly any[], U> = T extends [first: infer First, ...rest: infer Rest]
+  ? MyEqual<First, U> extends true
+    ? true
+    : Includes<Rest, U>
+  : false
+
+// as type returned from the utility is not generic, and it is not distributed, but it fails for:
+
+// Expect<Equal<Includes<[{ a: 'A' }], { readonly a: 'A' }>, false>>,
+// Expect<Equal<Includes<[{ readonly a: 'A' }], { a: 'A' }>, false>>,
+
+// because ?? TODO: why?
+
+type MyEqual2<X, Y> =
+  (<T>() => T extends X ? 1 : 2) extends
+  (<T>() => T extends Y ? 1 : 2) ? true : false
+
+type Includes<T extends readonly any[], U> = T extends [first: infer First, ...rest: infer Rest]
+  ? MyEqual2<First, U> extends true
+    ? true
+    : Includes<Rest, U>
+  : false
+
+// This works for all cases.
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
