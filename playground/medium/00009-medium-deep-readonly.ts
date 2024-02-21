@@ -36,7 +36,13 @@
 
 /* _____________ Your Code Here _____________ */
 
-type DeepReadonly<T> = any
+type DeepReadonly<T> = T extends object
+  ? T extends Function
+    ? T
+    : { readonly [key in keyof T]: DeepReadonly<T[key]> }
+  : T
+
+type k = DeepReadonly<X1>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
