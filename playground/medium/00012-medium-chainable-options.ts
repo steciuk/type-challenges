@@ -39,9 +39,14 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Chainable = {
-  option(key: string, value: any): any
-  get(): any
+interface Chainable2 {
+  option: <K extends string, V>(key: K extends keyof this ? never : K, value: V) => this & { [key in K as key extends keyof this ? never : key]: V }
+  get: () => Omit<this, 'option' | 'get'>
+}
+
+type Chainable<T = {}> = {
+  option: <K extends string, V>(key: K extends keyof T ? never : K, value: V) => Chainable<T & { [key in K as key extends keyof T ? never : key]: V }>
+  get: () => T
 }
 
 /* _____________ Test Cases _____________ */
@@ -86,7 +91,7 @@ type Expected2 = {
 }
 
 type Expected3 = {
-  name: number
+  name: string
 }
 
 /* _____________ Further Steps _____________ */
