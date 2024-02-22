@@ -26,7 +26,11 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Pop<T extends any[]> = any
+type Pop<T extends readonly any[]> = T extends [infer First, ...infer Rest]
+  ? Rest extends []
+    ? []
+    : [First, ...Pop<Rest>]
+  : []
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
