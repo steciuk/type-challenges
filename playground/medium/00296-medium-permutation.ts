@@ -16,7 +16,21 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Permutation<T> = any
+type Permutation<T, K = T> = [T] extends [never]
+  ? []
+  : K extends K
+    ? [K, ...Permutation<Exclude<T, K>>]
+    : never
+
+// [T] extends [never] cause T extends never doesn't work due to the generics being distributed and never is being understood as an empty union
+type IsNever<T> = T extends never ? true : false
+type IsNever2<T> = [T] extends [never] ? true : false
+type t = IsNever<never>
+// ^?
+type t2 = IsNever2<never>
+// ^?
+
+// K extends K is just always true, but again due to the distribution in conditionals let's us iterate over union elements, the results are then being union'ed recursively i.e. flattened.
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
