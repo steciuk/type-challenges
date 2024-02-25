@@ -19,7 +19,15 @@
 
 /* _____________ Your Code Here _____________ */
 
-type Absolute<T extends number | string | bigint> = any
+type RemoveNonNumeric<T extends string> = T extends `${infer First}${infer Rest}`
+  ? First extends '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9'
+    ? `${First}${RemoveNonNumeric<Rest>}`
+    : RemoveNonNumeric<Rest>
+  : ''
+
+type Absolute2<T extends number | string | bigint> = RemoveNonNumeric<`${T}`>
+
+type Absolute<T extends number | string | bigint> = `${T}` extends `-${infer U}` ? U : `${T}`
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
