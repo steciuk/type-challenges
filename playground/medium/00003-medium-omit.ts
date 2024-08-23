@@ -30,7 +30,7 @@
 
 /* _____________ Your Code Here _____________ */
 
-type MyOmit<T, K extends keyof T> = { [key in keyof T as key extends K ? never : key]: T[key] }
+type MyOmit<T, K extends keyof T> = { [key in keyof T as (key extends K ? never : key)]: T[key] }
 
 type k = MyOmit<Todo, 'description'>
 

@@ -12,9 +12,12 @@
 
 /* _____________ Your Code Here _____________ */
 
-type LengthOfString<S extends string, A extends readonly string[] = []> = S extends `${infer First}${infer Rest}`
-  ? LengthOfString<Rest, [...A, First]>
-  : A['length']
+// type LengthOfString<S extends string, A extends readonly string[] = []> = S extends `${infer First}${infer Rest}`
+//   ? LengthOfString<Rest, [...A, First]>
+//   : A['length']
+
+type StringToArray<S extends string> = S extends `${infer First}${infer Rest}` ? [First, ...StringToArray<Rest>] : []
+type LengthOfString<S extends string> = StringToArray<S>['length']
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
