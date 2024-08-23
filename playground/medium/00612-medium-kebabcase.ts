@@ -24,7 +24,13 @@
 
 /* _____________ Your Code Here _____________ */
 
-type KebabCase<S> = any
+type KebabCase<S extends string, FirstPass extends boolean = true> = S extends `${infer First}${infer Rest}`
+  ? FirstPass extends false
+    ? First extends Lowercase<First>
+      ? `${First}${KebabCase<Rest, false>}`
+      : `-${Lowercase<First>}${KebabCase<Rest, false>}`
+    : `${Lowercase<First>}${KebabCase<Rest, false>}`
+  : ''
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
