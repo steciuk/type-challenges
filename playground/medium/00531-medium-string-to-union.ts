@@ -19,7 +19,8 @@
 
 /* _____________ Your Code Here _____________ */
 
-type StringToUnion<T extends string> = any
+type StringToTuple<T extends string> = T extends `${infer First}${infer Rest}` ? [First, ...StringToTuple<Rest>] : []
+type StringToUnion<T extends string> = StringToTuple<T>[number]
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
