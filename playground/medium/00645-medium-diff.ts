@@ -6,16 +6,25 @@
   ### Question
 
   Get an `Object` that is the difference between `O` & `O1`
-
+>
   > View on GitHub: https://tsch.js.org/645
 */
 
 /* _____________ Your Code Here _____________ */
 
-type Diff<O, O1> = any
+type Diff<O extends object, O1 extends object> = {
+  [key in keyof (O & O1) as (key extends keyof (O | O1) ? never : key)]:
+  key extends keyof O
+    ? O[key]
+    : key extends keyof O1
+      ? O1[key]
+      : never
+}
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
+
+type t = Diff<Foo, Bar>
 
 type Foo = {
   name: string
