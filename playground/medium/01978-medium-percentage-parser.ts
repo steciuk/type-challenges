@@ -31,8 +31,23 @@
 */
 
 /* _____________ Your Code Here _____________ */
+// my solution
+type ParseSign<A extends string> = A extends `${infer First}${infer Rest}`
+  ? First extends '+' | '-'
+    ? [First, Rest]
+    : ['', `${First}${Rest}`]
+  : A extends '+' | '-'
+    ? [A, '']
+    : ['', A]
 
-type PercentageParser<A extends string> = any
+type PercentageParser<A extends string> = A extends `${infer WOP}%`
+  ? [...ParseSign<WOP>, '%']
+  : [...ParseSign<A>, '']
+
+// github solution
+// type CheckPrefix<T> = T extends '+' | '-' ? T : never;
+// type CheckSuffix<T> =  T extends `${infer P}%` ? [P, '%'] : [T, ''];
+// type PercentageParser<A extends string> = A extends `${CheckPrefix<infer L>}${infer R}` ? [L, ...CheckSuffix<R>] : ['', ...CheckSuffix<A>];
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
