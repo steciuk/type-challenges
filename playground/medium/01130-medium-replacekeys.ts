@@ -45,7 +45,16 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ReplaceKeys<U, T, Y> = any
+type ReplaceKeys<U extends object, T extends PropertyKey, Y extends object> = U extends U
+  ? { [key in keyof U]: key extends T
+      ? key extends keyof Y
+        ? Y[key]
+        : never
+      : U[key]
+    }
+  : never
+
+type t = ReplaceKeys<Nodes, 'name' | 'flag', { name: number, flag: string }>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
