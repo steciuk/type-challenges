@@ -22,9 +22,7 @@
 */
 
 /* _____________ Your Code Here _____________ */
-
-type RemoveIndexSignature<T> = any
-
+type RemoveIndexSignature<T> = { [key in keyof T as (string extends key ? never : number extends key ? never : symbol extends key ? never : key)]: T[key] }
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
