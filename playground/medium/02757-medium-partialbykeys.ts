@@ -26,8 +26,13 @@
 
 /* _____________ Your Code Here _____________ */
 
-type PartialByKeys<T, K> = any
+type _PartialByKeys<T extends object, K extends keyof T = any> = [K] extends [never]
+  ? { [key in keyof T]?: T[key] }
+  : { [key in keyof T as (key extends K ? never : key)]: T[key] } & { [key in K]?: T[key] }
 
+type Expand<T extends object> = { [key in keyof T]: T[key] }
+
+type PartialByKeys<T extends object, K extends keyof T = never> = Expand<_PartialByKeys<T, K>>
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 
