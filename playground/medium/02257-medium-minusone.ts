@@ -19,7 +19,16 @@
 
 /* _____________ Your Code Here _____________ */
 
-type MinusOne<T extends number> = any
+type StripLeadingZeros<S extends string> = S extends '0' ? S : S extends `0${infer Rest}` ? StripLeadingZeros<Rest> : S
+type ParseInt<T extends string> = T extends `${infer Num extends number}` ? Num : never
+type ReverseString<S extends string> = S extends `${infer First}${infer Rest}` ? `${ReverseString<Rest>}${First}` : ''
+type _MinusOne<S extends string> = S extends `${infer First extends number}${infer Rest}`
+  ? First extends 0
+    ? `9${_MinusOne<Rest>}`
+    : `${[9, 0, 1, 2, 3, 4, 5, 6, 7, 8][First]}${Rest}`
+  : never
+
+type MinusOne<T extends number> = T extends 0 ? -1 : ParseInt<StripLeadingZeros<ReverseString<_MinusOne<ReverseString<`${T}`>>>>>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'

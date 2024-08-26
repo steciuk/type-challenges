@@ -22,7 +22,7 @@ type DropChar<S extends string, C extends string> = S extends `${infer First}${i
   ? First extends C
     ? DropChar<Rest, C>
     : `${First}${DropChar<Rest, C>}`
-  : S
+  : ''
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
