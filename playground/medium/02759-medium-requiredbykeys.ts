@@ -27,7 +27,12 @@
 
 /* _____________ Your Code Here _____________ */
 
-type RequiredByKeys<T, K> = any
+type Expand<T extends Object> = Omit<T, never>
+type _RequiredByKeys<T extends object, K extends keyof T> = { [key in keyof T as (key extends K ? never : key)]: T[key] } & { [key in K]-?: T[key] }
+type RequiredByKeys<T extends object, K extends keyof T = keyof T> = Expand<_RequiredByKeys<T, K>>
+
+type t = RequiredByKeys<User, 'name'>
+//   ^?
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
