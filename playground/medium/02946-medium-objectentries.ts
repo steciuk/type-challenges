@@ -23,7 +23,22 @@
 
 /* _____________ Your Code Here _____________ */
 
-type ObjectEntries<T> = any
+type ObjectEntries1<T extends object, K extends keyof T = keyof T> = K extends any ? [K, T[K]] : never
+type t1 = ObjectEntries1<Partial<Model>>
+//   ^?
+// Fails for this case, cause every prop gets `undefined` in its type union
+
+type ObjectEntries2<T extends object, K extends keyof T = keyof T> = K extends any ? [K, Required<T>[K]] : never
+type t2 = ObjectEntries2<{ key?: undefined }>
+//   ^?
+// Fails for this case, cause we miss `undefined`
+
+type ObjectEntries<T extends object> = {
+  [key in keyof T]-?: [key, Required<T>[key] extends never ? undefined : Required<T>[key]]
+}[keyof T]
+
+type t3 = ObjectEntries<Partial<Model>>
+type t4 = ObjectEntries<{ key?: undefined }>
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
