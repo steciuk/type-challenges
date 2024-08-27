@@ -23,7 +23,7 @@
 
 /* _____________ Your Code Here _____________ */
 
-type OmitByType<T, U> = any
+type OmitByType<T extends object, U> = { [key in keyof T as (T[key] extends U ? never : key)]: T[key] }
 
 /* _____________ Test Cases _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
